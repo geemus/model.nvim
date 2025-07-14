@@ -157,17 +157,15 @@ function M.prompt.with_system_message(text)
   end
 end
 
-local function strip_citations(text)
-  -- Find the start and end positions of the citations block
+local function strip_block(text, delimit_start, delimit_stop)
   local start_pos, end_pos =
-    text:find(citations_delimit_start .. '.-' .. citations_delimit_stop)
+    text:find(delimit_start .. '.-' .. delimit_stop)
 
-  -- If the citations block is found, remove it from the text
   if start_pos and end_pos then
-    return text:sub(1, start_pos - 1) .. text:sub(end_pos + 1)
+    return text:sub(1, start_pos -1) .. text.sub(end_pos + 1)
   end
 
-  -- If no citations block is found, return the original text
+  -- no block found, return original
   return text
 end
 
@@ -176,7 +174,7 @@ function M.strip_asst_messages_of_citations(body)
     messages = vim.tbl_map(function(msg)
       if msg.role == 'assistant' then
         return vim.tbl_deep_extend('force', msg, {
-          content = strip_citations(msg.content),
+          content = strip_block(msg.content, citations_delimit_start, citations_delimit_stop),
         })
       else
         return msg
