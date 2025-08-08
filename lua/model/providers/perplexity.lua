@@ -37,6 +37,9 @@ end
 local citations_delimit_start = '\n\n<<<<<< citations\n'
 local citations_delimit_stop = '>>>>>>\n'
 
+local cot_delimit_start = '\n\n<<<<<< cot\n'
+local cot_delimit_stop = '>>>>>>\n'
+
 ---@param handlers StreamHandlers
 ---@param params? any Additional options for Perplexity endpoint
 ---@param options? { url?: string, endpoint?: string, authorization?: string } Request endpoint and url. Defaults to 'https://api.openai.com/v1/' and 'chat/completions'. `authorization` overrides the request auth header. If url is provided the environment key will not be sent, you'll need to provide an authorization.
@@ -162,7 +165,7 @@ local function strip_block(text, delimit_start, delimit_stop)
     text:find(delimit_start .. '.-' .. delimit_stop)
 
   if start_pos and end_pos then
-    return text:sub(1, start_pos -1) .. text.sub(end_pos + 1)
+    return text:sub(1, start_pos - 1) .. text:sub(end_pos + 1)
   end
 
   -- no block found, return original
@@ -174,7 +177,11 @@ function M.strip_asst_messages_of_citations(body)
     messages = vim.tbl_map(function(msg)
       if msg.role == 'assistant' then
         return vim.tbl_deep_extend('force', msg, {
-          content = strip_block(msg.content, citations_delimit_start, citations_delimit_stop),
+            strip_block(
+              strip_block(msg.content, cot_delimit_start, cot_delimit_stop),
+              citations_delimit_start,
+              citations_delimit_stop
+            ),
         })
       else
         return msg
