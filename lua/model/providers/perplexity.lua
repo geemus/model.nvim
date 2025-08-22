@@ -34,8 +34,8 @@ local function extract_chat_data(item)
   end
 end
 
-local citations_delimit_start = '\n\n<<<<<< citations\n'
-local citations_delimit_stop = '>>>>>>\n'
+local strip_delimit_start = '\n\n<<<<<<'
+local strip_delimit_stop = '>>>>>>\n'
 
 ---@param handlers StreamHandlers
 ---@param params? any Additional options for Perplexity endpoint
@@ -79,11 +79,11 @@ function M.request_completion(handlers, params, options)
         end
 
         if data.finish_reason ~= nil then
-          completion = completion .. citations_delimit_start
+          completion = completion .. strip_delimit_start .. ' citations\n'
           for index, citation in ipairs(data.citations) do
             completion = completion .. index .. '. <' .. citation .. '>\n'
           end
-          completion = completion .. citations_delimit_stop
+          completion = completion .. strip_delimit_stop
           handlers.on_finish(completion, data.finish_reason)
         end
       end
@@ -157,10 +157,10 @@ function M.prompt.with_system_message(text)
   end
 end
 
-local function strip_citations(text)
+local function strip_delimited(text)
   -- Find the start and end positions of the citations block
   local start_pos, end_pos =
-    text:find(citations_delimit_start .. '.-' .. citations_delimit_stop)
+    text:find(strip_delimit_start .. '.-' .. strip_delimit_stop)
 
   -- If the citations block is found, remove it from the text
   if start_pos and end_pos then
@@ -176,7 +176,7 @@ function M.strip_asst_messages_of_citations(body)
     messages = vim.tbl_map(function(msg)
       if msg.role == 'assistant' then
         return vim.tbl_deep_extend('force', msg, {
-          content = strip_citations(msg.content),
+          content = strip_delimited(msg.content),
         })
       else
         return msg
