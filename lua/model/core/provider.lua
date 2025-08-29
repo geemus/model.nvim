@@ -73,7 +73,11 @@ local function create_segment(source, segment_mode, hl_group)
     else
       return segment.create_segment_at(#source.lines, 0, hl_group, 0)
     end
-  elseif segment_mode == M.mode.BUFFER or segment_mode == M.mode.SPLIT or segment_mode == M.mode.VSPLIT then
+  elseif
+    segment_mode == M.mode.BUFFER
+    or segment_mode == M.mode.SPLIT
+    or segment_mode == M.mode.VSPLIT
+  then
     if segment_mode == M.mode.SPLIT then
       vim.cmd.new()
     else
