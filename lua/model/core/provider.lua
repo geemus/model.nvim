@@ -27,6 +27,8 @@ M.mode = {
   BUFFER = 'buffer', -- create a new buffer and insert
   INSERT = 'insert', -- insert at the cursor position
   INSERT_OR_REPLACE = 'insert_or_replace', -- insert at the cursor position if no selection, or replace the selection
+  SPLIT = 'split', -- create a new buffer and open in a split
+  VSPLIT = 'vsplit', -- create a new buffer and open in a vsplit
 }
 
 ---@class StreamHandlers
@@ -71,8 +73,12 @@ local function create_segment(source, segment_mode, hl_group)
     else
       return segment.create_segment_at(#source.lines, 0, hl_group, 0)
     end
-  elseif segment_mode == M.mode.BUFFER then
-    vim.cmd.vnew()
+  elseif segment_mode == M.mode.BUFFER or segment_mode == M.mode.SPLIT or segment_mode == M.mode.VSPLIT then
+    if segment_mode == M.mode.SPLIT then
+      vim.cmd.new()
+    else
+      vim.cmd.vnew()
+    end
 
     vim.api.nvim_set_option_value('buflisted', true, { scope = 'local' })
     vim.api.nvim_set_option_value('buftype', 'nowrite', { scope = 'local' })
