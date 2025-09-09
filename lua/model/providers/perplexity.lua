@@ -81,11 +81,15 @@ function M.request_completion(handlers, params, options)
         if data.finish_reason ~= nil then
           completion = completion .. citations_delimit_start
           for index, result in ipairs(data.search_results) do
-            completion = completion .. index .. '. '
-            completion = completion .. '[' .. result.title .. '](' .. result.url ..') '
-            completion = completion .. result.snippet .. ' '
-            completion = completion .. '(Published: ' .. (result.date or '') .. ', Updated: ' .. (result.last_updated or '') .. ')'
-            completion = completion .. '\n'
+            completion = completion
+              .. string.format('%d.', index)
+              .. string.format(' [%s](%s)', result.title, result.url)
+              .. result.snippet
+              .. string.format(
+                ' (Published: %s, Updated: %s)\n',
+                result.date or '',
+                result.last_updated or ''
+              )
           end
           completion = completion .. citations_delimit_stop
           handlers.on_finish(completion, data.finish_reason)
