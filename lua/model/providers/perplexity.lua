@@ -27,9 +27,9 @@ local function extract_chat_data(item)
 
   if data ~= nil and data.choices ~= nil then
     return {
-      citations = data.citations,
       content = (data.choices[1].delta or {}).content,
       finish_reason = data.choices[1].finish_reason,
+      search_results = data.search_results,
     }
   end
 end
@@ -80,8 +80,12 @@ function M.request_completion(handlers, params, options)
 
         if data.finish_reason ~= nil then
           completion = completion .. citations_delimit_start
-          for index, citation in ipairs(data.citations) do
-            completion = completion .. index .. '. <' .. citation .. '>\n'
+          for index, result in ipairs(data.search_results) do
+            completion = completion .. index .. '. '
+            completion = completion .. '[' .. result.title .. '](' .. result.url ..') '
+            completion = completion .. result.snippet .. ' '
+            completion = completion .. '(Published: ' .. (result.date or '') .. ', Updated: ' .. (result.last_updated or '') .. ')'
+            completion = completion .. '\n'
           end
           completion = completion .. citations_delimit_stop
           handlers.on_finish(completion, data.finish_reason)
