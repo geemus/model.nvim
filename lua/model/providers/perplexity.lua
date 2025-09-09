@@ -63,7 +63,7 @@ function M.request_completion(handlers, params, options)
       local data = extract_chat_data(message.data)
 
       if data == nil then
-        if not message.data == '[DONE]' then
+        if message.data ~= '[DONE]' then
           handlers.on_error(
             vim.inspect({
               data = message.data,
