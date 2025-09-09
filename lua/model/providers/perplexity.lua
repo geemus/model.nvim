@@ -84,7 +84,7 @@ function M.request_completion(handlers, params, options)
             completion = completion
               .. string.format('%d.', index)
               .. string.format(' [%s](%s)', result.title, result.url)
-              .. result.snippet
+              .. string.format(' %s', result.snippet)
               .. string.format(
                 ' (Published: %s, Updated: %s)\n',
                 result.date or '',
