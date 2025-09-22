@@ -164,7 +164,7 @@ local closed = {
     },
     params = {
       max_tokens = 8192,
-      model = 'claude-3-5-sonnet-latest',
+      model = 'claude-3-7-sonnet-latest',
       system = 'You are an expert programmer. Provide code which should go between the before and after blocks of code. Respond only with a markdown code block. Use comments within the code if explanations are necessary.',
     },
     builder = function(input, context)

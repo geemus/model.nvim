@@ -245,7 +245,7 @@ local closed = {
     provider = anthropic,
     create = input_if_selection,
     params = {
-      model = 'claude-3-5-sonnet-latest',
+      model = 'claude-3-7-sonnet-latest',
     },
     run = function(messages, config)
       return vim.tbl_deep_extend('force', config.params, {
@@ -258,7 +258,7 @@ local closed = {
     provider = anthropic,
     create = input_if_selection,
     params = {
-      model = 'claude-3-5-sonnet-20240620',
+      model = 'claude-3-7-sonnet-latest',
       max_tokens = 8192,
     },
     options = {
