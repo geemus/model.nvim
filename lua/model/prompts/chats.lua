@@ -261,11 +261,6 @@ local closed = {
       model = 'claude-3-7-sonnet-latest',
       max_tokens = 8192,
     },
-    options = {
-      headers = {
-        ['anthropic-beta'] = 'prompt-caching-2024-07-31,max-tokens-3-5-sonnet-2024-07-15',
-      },
-    },
     run = function(messages, config)
       local msgs = vim.tbl_map(function(msg)
         return {

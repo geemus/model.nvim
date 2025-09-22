@@ -157,9 +157,6 @@ local closed = {
     provider = anthropic,
     mode = mode.INSERT_OR_REPLACE,
     options = {
-      headers = {
-        ['anthropic-beta'] = 'max-tokens-3-5-sonnet-2024-07-15',
-      },
       trim_code = true,
     },
     params = {

@@ -42,7 +42,6 @@ local M = {
       headers = vim.tbl_extend('force', {
         ['Content-Type'] = 'application/json',
         ['x-api-key'] = util.env('ANTHROPIC_API_KEY'),
-        ['anthropic-beta'] = 'messages-2023-12-15',
         ['anthropic-version'] = '2023-06-01',
       }, options.headers or {}),
       body = vim.tbl_deep_extend('force', {
